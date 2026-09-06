@@ -211,8 +211,7 @@ sleep:
   .word irq
 
 .segment "CHRROM"
-  ;.incbin "../chr/gfx0.chr"
-  .incbin "../chr/graphics.chr"
+  .incbin "../chr/gfx0.chr"
   .incbin "../chr/gfx1.chr"
   .incbin "../chr/gfx2.chr"
   .incbin "../chr/gfx3.chr"
