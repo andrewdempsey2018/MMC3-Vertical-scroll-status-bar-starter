@@ -46,50 +46,13 @@ nmi:
   jsr read_controller
 
 ; --------------------------------------------------
-; sfsdf
+; Draw a row of meta tiles if scroll threshold has
+; been reached
 ; --------------------------------------------------
   lda scroll_y
   and #%00001111 ; multiple of 16
-  bne :+
-  jsr draw_meta_row
-  lda #$01
-  sta prep_next_row
-:
+  bne dont_draw_row
 
-; --------------------------------------------------
-; Set scroll
-; --------------------------------------------------
-  dec scroll_y
-  lda scroll_y
-  cmp #255
-  bne :+
-  lda #239
-  sta scroll_y
-:
-
-; perform scroll on PPU
-  lda scroll_x
-  sta PPUSCROLL
-  lda scroll_y
-  sta PPUSCROLL
-
-; --------------------------------------------------
-; Toggle sleeping flag
-; --------------------------------------------------
-  lda #$00
-  sta sleeping
-
-  RESTORE_REGISTERS
-
-  sta $E001
-  sta $C001
-
-  rti
-
-; --------------------------------------------------
-; draw a row of metatiles
-; --------------------------------------------------
-draw_meta_row:
   ldy row_number
   lda PPUSTATUS
   lda row_hi, y
@@ -125,4 +88,36 @@ draw_bottom_of_tiles:
   cpy #$10
   bne draw_bottom_of_tiles
 
-  rts
+  lda #$01
+  sta prep_next_row
+dont_draw_row:
+
+; --------------------------------------------------
+; Set scroll
+; --------------------------------------------------
+  dec scroll_y
+  lda scroll_y
+  cmp #255
+  bne :+
+  lda #239
+  sta scroll_y
+:
+
+; perform scroll on PPU
+  lda scroll_x
+  sta PPUSCROLL
+  lda scroll_y
+  sta PPUSCROLL
+
+; --------------------------------------------------
+; Toggle sleeping flag
+; --------------------------------------------------
+  lda #$00
+  sta sleeping
+
+  RESTORE_REGISTERS
+
+  sta $E001
+  sta $C001
+
+  rti
