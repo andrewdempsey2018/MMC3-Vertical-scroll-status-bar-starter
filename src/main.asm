@@ -6,9 +6,9 @@ ptr: .res 2
 ptr_lo = ptr
 ptr_hi = ptr+1
 row_number: .res 1
-row_ptr: .res 2
-row_tile_ptr_lo = row_ptr
-row_tile_ptr_hi = row_ptr+1
+row_tile_ptr: .res 2
+row_tile_ptr_lo = row_tile_ptr
+row_tile_ptr_hi = row_tile_ptr+1
 row_attrib_ptr: .res 2
 row_attrib_ptr_lo = row_attrib_ptr
 row_attrib_ptr_hi = row_attrib_ptr+1

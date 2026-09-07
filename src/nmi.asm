@@ -62,7 +62,7 @@ nmi:
 
   ldy #$00
 draw_top_of_tiles:
-  lda (row_ptr), y
+  lda (row_tile_ptr), y
   asl a
   tax
   lda metatiles_top_table, x
@@ -76,7 +76,7 @@ draw_top_of_tiles:
 
   ldy #$00
 draw_bottom_of_tiles:
-  lda (row_ptr), y
+  lda (row_tile_ptr), y
   asl a
   tax
   lda metatiles_bottom_table, x
