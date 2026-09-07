@@ -47,7 +47,7 @@ nmi:
 
 ; --------------------------------------------------
 ; Draw a row of meta tiles if scroll threshold has
-; been reached
+; been reached.
 ; --------------------------------------------------
   lda scroll_y
   and #%00001111 ; multiple of 16
@@ -55,9 +55,9 @@ nmi:
 
   ldy row_number
   lda PPUSTATUS
-  lda row_hi, y
+  lda row_address_hi_table, y
   sta PPUADDR
-  lda row_lo, y
+  lda row_address_lo_table, y
   sta PPUADDR
 
   ldy #$00
@@ -93,17 +93,16 @@ draw_bottom_of_tiles:
 dont_draw_row:
 
 ; --------------------------------------------------
-; Set scroll
+; Handle scrolling
 ; --------------------------------------------------
   dec scroll_y
   lda scroll_y
   cmp #255
-  bne :+
+  bne dont_reset_scroll_value
   lda #239
   sta scroll_y
-:
+dont_reset_scroll_value:
 
-; perform scroll on PPU
   lda scroll_x
   sta PPUSCROLL
   lda scroll_y

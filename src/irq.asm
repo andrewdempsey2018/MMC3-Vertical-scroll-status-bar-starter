@@ -15,7 +15,6 @@ irq:
   dex
   bne :-
 
-
   ldx #$00
   stx PPUCTRL
   stx PPUMASK
