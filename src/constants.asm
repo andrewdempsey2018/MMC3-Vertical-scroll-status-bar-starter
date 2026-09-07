@@ -16,3 +16,11 @@ PPUDATA	= $2007
 OAMDMA = $4014
 APU_FRAME_COUNTER = $4017
 APU_DMC = $4010
+
+; --------------------------------------------------
+; MMC3 registers
+; --------------------------------------------------
+IRQ_LATCH = $C000
+IRQ_RELOAD = $C001
+IRQ_DISABLE = $E000
+IRQ_ENABLE = $E001
