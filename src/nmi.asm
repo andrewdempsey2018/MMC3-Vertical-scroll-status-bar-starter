@@ -90,6 +90,29 @@ draw_bottom_of_tiles:
 
   lda #$01
   sta prep_next_row
+
+; attribs
+  lda row_number
+  and #$01
+  bne dont_load_attribs
+
+  ldy row_number
+  lda PPUSTATUS
+  lda #$23 ;;; attrib address high
+  sta PPUADDR
+  lda attrib_address_lo_table, y
+  sta PPUADDR
+
+  ldy #$00
+load_attribs:
+  lda (row_attrib_ptr), y
+  sta PPUDATA
+  iny
+  cpy #8
+  bne load_attribs
+
+dont_load_attribs:
+  
 dont_draw_row:
 
 ; --------------------------------------------------

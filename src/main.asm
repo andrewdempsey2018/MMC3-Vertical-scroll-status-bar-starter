@@ -101,7 +101,9 @@ main:
   lda tiles_hi_table, x
   sta row_tile_ptr_hi
 
+  lda attribs_lo_table, x
   sta row_attrib_ptr_lo
+  lda attribs_hi_table, x
   sta row_attrib_ptr_hi
 
   lda #$00
@@ -175,6 +177,22 @@ main_loop:
   adc #0
   sta row_tile_ptr_hi
 
+; attribs
+  lda row_number
+  and #$01
+  bne dont_load_attribs_yet
+
+  lda row_attrib_ptr_lo
+  clc
+  adc #8
+  sta row_attrib_ptr_lo
+  lda row_attrib_ptr_hi
+  adc #0
+  sta row_attrib_ptr_hi
+
+dont_load_attribs_yet:
+
+;;;
   inc row_number
 
   lda row_number
@@ -189,6 +207,11 @@ main_loop:
   sta row_tile_ptr_lo
   lda tiles_hi_table, x
   sta row_tile_ptr_hi
+  ;
+  lda attribs_lo_table, x
+  sta row_attrib_ptr_lo
+  lda attribs_hi_table, x
+  sta row_attrib_ptr_hi
 
 dont_reset_row_number:
 
