@@ -4,6 +4,8 @@ This is a bare bones NES starter project intended as a jumping off point for NES
 
 Includes minimalist MMC3 setup, vertical metatile scrolling and status bar.
 
+Rom loads to a 'title screen'. Press start to change to 'level 1'
+
 # A note on AI contributions:
 
 This project is intentionally written and maintained by humans. Please don't use AI coding agents or code-generation tools to modify the project. This isn't an anti-AI statement, it's simply a choice I'm making for this project. Thanks for respecting it.

@@ -14,6 +14,7 @@ row_attrib_ptr_lo = row_attrib_ptr
 row_attrib_ptr_hi = row_attrib_ptr+1
 prep_next_row: .res 1
 screen_number: .res 1
+do_scroll: .res 1
 
 .segment "RODATA"
 palette_table:
@@ -37,11 +38,11 @@ palette_table:
 ; $FF is filler.
 ; --------------------------------------------------
 row_address_hi_table:
-  .byte $23,$23,$23,$22,$22,$22,$22,$21,$21,$21,$21,$20,$20,$20,$20
+  .byte $20,$20,$20,$20,$21,$21,$21,$21,$22,$22,$22,$22,$23,$23,$23
 row_address_lo_table:
-  .byte $80,$40,$00,$C0,$80,$40,$00,$C0,$80,$40,$00,$C0,$80,$40,$00
+  .byte $00,$40,$80,$C0,$00,$40,$80,$C0,$00,$40,$80,$C0,$00,$40,$80
 attrib_address_lo_table:
-  .byte $F8,$FF,$F0,$FF,$E8,$FF,$E0,$FF,$D8,$FF,$D0,$FF,$C8,$FF,$C0
+  .byte $C0,$FF,$C8,$FF,$D0,$FF,$D8,$FF,$E0,$FF,$E8,$FF,$F0,$FF,$F8
 
 .segment "CODE"
 ; --------------------------------------------------
@@ -54,6 +55,8 @@ attrib_address_lo_table:
 .include "nmi.asm"
 .include "irq.asm"
 .include "controllers.asm"
+.include "prepare_row.asm"
+.include "draw_row.asm"
 
 main:
 ; --------------------------------------------------
@@ -94,20 +97,20 @@ main:
   sta ptr_hi
   sta prep_next_row
   sta screen_number
+  sta do_scroll
+  sta row_number
 
-  ldx #0
-  lda tiles_lo_table, x
+  lda #<title_screen_tiles_table
   sta row_tile_ptr_lo
-  lda tiles_hi_table, x
+  lda #>title_screen_tiles_table
   sta row_tile_ptr_hi
 
-  lda attribs_lo_table, x
+  lda #<title_screen_attribs_table
   sta row_attrib_ptr_lo
-  lda attribs_hi_table, x
+  lda #>title_screen_attribs_table
   sta row_attrib_ptr_hi
 
-  lda #$00
-  sta row_number
+  
 
 ; --------------------------------------------------
 ; nametable 01
@@ -139,6 +142,40 @@ main:
   bne :-
 
 ; --------------------------------------------------
+; load title screen
+; --------------------------------------------------
+
+  lda #14
+  sta row_number
+
+:
+  jsr draw_row ; draw a row and draw attributes if row number is even
+  jsr prepare_row ; prepare next row, prepare next line of attributes if row number is even
+  dec row_number
+  lda row_number
+  cmp #255
+  bne :-
+
+; now prepare for loading the first level
+  lda #14
+  sta row_number
+
+  ldx #0
+  lda tiles_lo_table, x
+  sta row_tile_ptr_lo
+  lda tiles_hi_table, x
+  sta row_tile_ptr_hi
+
+  lda attribs_lo_table, x
+  sta row_attrib_ptr_lo
+  lda attribs_hi_table, x
+  sta row_attrib_ptr_hi
+
+  jsr draw_row ; draw a row and draw attributes if row number is even
+  jsr prepare_row ; prepare next row, prepare next line of attributes if row number is even
+  dec row_number
+
+; --------------------------------------------------
 ; Enable maskable interrupts
 ; --------------------------------------------------
   cli
@@ -157,7 +194,35 @@ main:
   sta PPUCTRL
 
 main_loop:
-  
+
+; --------------------------------------------------
+; porcess inputs
+; --------------------------------------------------
+check_up:
+  lda buttons_held
+  and #BTN_UP
+  beq check_down
+
+  lda #$01
+  sta do_scroll
+check_down:
+  lda buttons_held
+  and #BTN_DOWN
+  beq check_left
+
+  lda #$00
+  sta do_scroll
+
+check_left:
+  lda buttons_held
+  and #BTN_LEFT
+  beq check_right
+check_right:
+  lda buttons_held
+  and #BTN_RIGHT
+  beq :+
+:
+
 ; --------------------------------------------------
 ; If NMI has set the prep_next_row flag then update
 ; tile pointer and attributes pointer in preparation
@@ -168,37 +233,18 @@ main_loop:
 ; --------------------------------------------------
   lda prep_next_row
   beq dont_prepare_row
+  jsr prepare_row
 
-  lda row_tile_ptr_lo
-  clc
-  adc #16
-  sta row_tile_ptr_lo
-  lda row_tile_ptr_hi
-  adc #0
-  sta row_tile_ptr_hi
+  lda #$00
+  sta prep_next_row
 
-; attribs
-  lda row_number
-  and #$01
-  bne dont_load_attribs_yet
-
-  lda row_attrib_ptr_lo
-  clc
-  adc #8
-  sta row_attrib_ptr_lo
-  lda row_attrib_ptr_hi
-  adc #0
-  sta row_attrib_ptr_hi
-
-dont_load_attribs_yet:
-
-;;;
-  inc row_number
+  ;;;;;
+  dec row_number
 
   lda row_number
-  cmp #15
+  cmp #255
   bne dont_reset_row_number
-  lda #0
+  lda #14
   sta row_number
   
   inc screen_number
@@ -212,11 +258,9 @@ dont_load_attribs_yet:
   sta row_attrib_ptr_lo
   lda attribs_hi_table, x
   sta row_attrib_ptr_hi
+  ;;;;;
 
 dont_reset_row_number:
-
-  lda #$00
-  sta prep_next_row
 
 dont_prepare_row:
 

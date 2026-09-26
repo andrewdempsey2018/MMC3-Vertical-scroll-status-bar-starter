@@ -9,12 +9,15 @@ irq:
 ; NOP loop to clean MMC3 related status bar
 ; artifacts. Adjust / comment out as necessary
 ; --------------------------------------------------
-  ldx #8
-:
-  NOP
-  dex
-  bne :-
+;  ldx #8
+;:
+;  NOP
+;  dex
+;  bne :-
 
+; --------------------------------------------------
+; 
+; --------------------------------------------------
   ldx #$00
   stx PPUCTRL
   stx PPUMASK
