@@ -33,19 +33,6 @@ palette_table:
 .include "levels_data.asm"
 .include "statusbar_data.asm"
 
-; --------------------------------------------------
-; Scrolling tables.
-; Purposely in reverse order to facilitate
-; downward scroll.
-; $FF is filler.
-; --------------------------------------------------
-row_address_hi_table:
-  .byte $20,$20,$20,$20,$21,$21,$21,$21,$22,$22,$22,$22,$23,$23,$23
-row_address_lo_table:
-  .byte $00,$40,$80,$C0,$00,$40,$80,$C0,$00,$40,$80,$C0,$00,$40,$80
-attrib_address_lo_table:
-  .byte $C0,$FF,$C8,$FF,$D0,$FF,$D8,$FF,$E0,$FF,$E8,$FF,$F0,$FF,$F8
-
 .segment "CODE"
 ; --------------------------------------------------
 ; Includes for fixed bank

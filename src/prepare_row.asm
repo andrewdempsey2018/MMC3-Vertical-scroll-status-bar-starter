@@ -1,6 +1,9 @@
 ; --------------------------------------------------
 ; Sets metatile pointer to the next row of tiles in
-; sequence. If row_number is even.
+; sequence.
+;
+; If row_number is even, pointer to attributes is
+; also updated.
 ;
 ; Inputs:
 ; row_number: the row number that will be prepared
@@ -9,7 +12,10 @@
 ;
 ; Clobbers: A
 ;
-; Outputs: None
+; Outputs:
+; row_tile_ptr will be updated to point at next
+; row of data that is to rendered
+; row_attrib_ptr will be updated if applicable
 ;
 ; Notes:
 ; --------------------------------------------------
