@@ -6,7 +6,10 @@ nmi:
   stx PPUCTRL
   stx PPUMASK
 
-; palette
+; --------------------------------------------------
+; IRQ changes some palette values to colors needed
+; for status bar, restore these to orignal values.
+; --------------------------------------------------
   lda PPUSTATUS
   lda #$3F
   sta PPUADDR
@@ -16,8 +19,6 @@ nmi:
   sta PPUDATA
   lda #$10
   sta PPUDATA
-
-
 
 ; --------------------------------------------------
 ; Trigger sprite DMA transfer
@@ -89,15 +90,15 @@ dont_scroll:
   lda #%10001000
   sta PPUCTRL
 
-  RESTORE_REGISTERS
-
 ; --------------------------------------------------
-; 
+; If IRQ is on,
 ; --------------------------------------------------
   lda do_irq
   beq :+
-  sta $E001
-  sta $C001
+  sta IRQ_ENABLE
+  sta IRQ_RELOAD
 :
+
+  RESTORE_REGISTERS
 
   rti

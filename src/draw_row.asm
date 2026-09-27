@@ -17,6 +17,7 @@
 ; --------------------------------------------------
 
 .segment "RODATA"
+
 ; --------------------------------------------------
 ; Nametable address of first tile in each
 ; 16x16 metatile row (row numbers 0-14).
@@ -30,8 +31,8 @@ row_address_lo_table:
   .byte $00,$40,$80,$C0,$00,$40,$80,$C0,$00,$40,$80,$C0,$00,$40,$80
 attrib_address_lo_table:
   .byte $C0,$FF,$C8,$FF,$D0,$FF,$D8,$FF,$E0,$FF,$E8,$FF,$F0,$FF,$F8
-.segment "CODE"
 
+.segment "CODE"
 draw_row:
   ldy row_number
   lda PPUSTATUS

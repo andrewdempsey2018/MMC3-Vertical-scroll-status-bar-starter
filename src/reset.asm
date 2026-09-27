@@ -20,25 +20,31 @@ reset:
 ; Mapper init code can go here
 ; --------------------------------------------------
   lda #0
-  sta $E000
+  sta IRQ_DISABLE
 
   lDA #0
-  sta $A000
+  sta NAMETABLE_MIRRORING
 
-  bit $2002
+
+; --------------------------------------------------
+; Toggle PPU A12 (prevent undesirable IRQ behaviour)
+; This code is verbatim in most MMC3 games
+; --------------------------------------------------
+  bit PPUSTATUS
   lda #$10
   tax
-xloop:
-  sta $2006
-  sta $2006
+toggle:
+  sta PPUADDR
+  sta PPUADDR
   eor #$10
   dex
-  bne xloop
+  bne toggle
 
-  lda #$D0
-  sta $C000
-  ;sta $C001
-  ;sta $E001
+; --------------------------------------------------
+; Set scanline IRQ will trigger
+; --------------------------------------------------
+  lda #208 ; status bar is 32 pixels high
+  sta IRQ_LATCH
 
 ; --------------------------------------------------
 ; VBlank wait 1 of 2

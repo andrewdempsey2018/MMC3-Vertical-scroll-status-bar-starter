@@ -3,7 +3,7 @@
 irq:
   SAVE_REGISTERS
   
-  sta $E000
+  sta IRQ_DISABLE
 
 ; --------------------------------------------------
 ; NOP loop to clean MMC3 related status bar
@@ -16,7 +16,8 @@ irq:
 ;  bne :-
 
 ; --------------------------------------------------
-; 
+; Update relevant palette entries to status bar
+; values.
 ; --------------------------------------------------
   ldx #$00
   stx PPUCTRL
