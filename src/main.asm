@@ -1,3 +1,9 @@
+; --------------------------------------------------
+; Constants
+; --------------------------------------------------
+TITLE_SCREEN_SCENE = 0
+LEVEL_1_SCENE = 1
+
 .segment "ZEROPAGE"
 sleeping: .res 1
 scroll_x: .res 1
@@ -16,6 +22,7 @@ prep_next_row: .res 1
 screen_number: .res 1
 do_scroll: .res 1
 do_irq: .res 1
+scene_number: .res 1
 
 .segment "RODATA"
 palette_table:
@@ -91,6 +98,7 @@ main:
   sta do_scroll
   sta do_irq
   sta row_number
+  sta scene_number
 
 ; --------------------------------------------------
 ; Load status bar into nametable 01 ($2400)
@@ -141,25 +149,6 @@ main:
 
   jsr load_screen
 
-; now prepare for loading the first level
-;  lda #14
-;  sta row_number
-
-;  ldx #0
-;  lda tiles_lo_table, x
-;  sta row_tile_ptr_lo
-;  lda tiles_hi_table, x
-;  sta row_tile_ptr_hi
-
-;  lda attribs_lo_table, x
-;  sta row_attrib_ptr_lo
-;  lda attribs_hi_table, x
-;  sta row_attrib_ptr_hi
-
-;  jsr draw_row
-;  jsr prepare_row
-;  dec row_number
-
 ; --------------------------------------------------
 ; Enable maskable interrupts
 ; --------------------------------------------------
@@ -181,36 +170,28 @@ main:
 main_loop:
 
 ; --------------------------------------------------
-; porcess inputs
+; Update current scene
 ; --------------------------------------------------
+  lda scene_number
+  cmp #TITLE_SCREEN_SCENE
+  beq @title_screen_scene
+  cmp #LEVEL_1_SCENE
+  beq @level_1_scene
+
+@title_screen_scene:
   lda buttons_pressed
   and #BTN_START
-  beq button_check_done
-
-; now prepare for loading the first level
-  lda #14
-  sta row_number
-
-  ldx #0
-  lda tiles_lo_table, x
-  sta row_tile_ptr_lo
-  lda tiles_hi_table, x
-  sta row_tile_ptr_hi
-
-  lda attribs_lo_table, x
-  sta row_attrib_ptr_lo
-  lda attribs_hi_table, x
-  sta row_attrib_ptr_hi
-
-  jsr draw_row
-  jsr prepare_row
-  dec row_number
-
-; turn on scrolling & MMC scanline IRQ
+  beq finished_updating_scene
   lda #$01
-  sta do_scroll
-  sta do_irq
-button_check_done:
+  sta scene_number
+  jsr change_level
+  jmp finished_updating_scene
+
+@level_1_scene:
+  ; do stuff
+  jmp finished_updating_scene
+
+finished_updating_scene:
 
 ; --------------------------------------------------
 ; If NMI has set the prep_next_row flag then update

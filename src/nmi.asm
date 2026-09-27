@@ -108,7 +108,16 @@ dont_scroll:
   lda #$00
   sta sleeping
 
-  ; --------------------------------------------------
+; --------------------------------------------------
+; If IRQ is on,
+; --------------------------------------------------
+  lda do_irq
+  beq no_irq_reload
+  sta IRQ_ENABLE
+  sta IRQ_RELOAD
+no_irq_reload:
+
+; --------------------------------------------------
 ; Enable sprites and background
 ; draw sprites and bg on leftmost side of screen
 ; --------------------------------------------------
@@ -120,15 +129,6 @@ dont_scroll:
 ; --------------------------------------------------
   lda #%10001000
   sta PPUCTRL
-
-; --------------------------------------------------
-; If IRQ is on,
-; --------------------------------------------------
-  lda do_irq
-  beq no_irq_reload
-  sta IRQ_ENABLE
-  sta IRQ_RELOAD
-no_irq_reload:
 
   RESTORE_REGISTERS
 
