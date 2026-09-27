@@ -1,6 +1,6 @@
 version	major=2,minor=0
 info	csym=0,file=16,lib=0,line=693,mod=1,scope=2,seg=16,span=639,sym=95,type=8
-file	id=0,name="src/main.asm",size=5607,mtime=0x6AB8FC11,mod=0
+file	id=0,name="src/main.asm",size=5607,mtime=0x6AB9060F,mod=0
 file	id=1,name="src/levels_data.asm",size=9854,mtime=0x6AB904CE,mod=0
 file	id=2,name="src/statusbar_data.asm",size=4688,mtime=0x6AB8E955,mod=0
 file	id=3,name="src/header.asm",size=548,mtime=0x6A8E7EB6,mod=0
