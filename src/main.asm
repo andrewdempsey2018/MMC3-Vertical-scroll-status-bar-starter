@@ -131,19 +131,19 @@ main:
   bne :-
 
 ; --------------------------------------------------
-; load title screen
+; load title screen into nametable 00 ($2000)
 ; --------------------------------------------------
 
   lda #14
   sta row_number
 
-:
-  jsr draw_row ; draw a row and draw attributes if row number is even
-  jsr prepare_row ; prepare next row, prepare next line of attributes if row number is even
+load_next_row:
+  jsr draw_row
+  jsr prepare_row
   dec row_number
   lda row_number
   cmp #255
-  bne :-
+  bne load_next_row
 
 ; now prepare for loading the first level
   lda #14
@@ -160,8 +160,8 @@ main:
   lda attribs_hi_table, x
   sta row_attrib_ptr_hi
 
-  jsr draw_row ; draw a row and draw attributes if row number is even
-  jsr prepare_row ; prepare next row, prepare next line of attributes if row number is even
+  jsr draw_row
+  jsr prepare_row
   dec row_number
 
 ; --------------------------------------------------
@@ -189,12 +189,12 @@ main_loop:
 ; --------------------------------------------------
   lda buttons_pressed
   and #BTN_START
-  beq :+
+  beq button_check_done
 
   lda #$01
   sta do_scroll
   sta do_irq
-:
+button_check_done:
 
 ; --------------------------------------------------
 ; If NMI has set the prep_next_row flag then update
@@ -211,7 +211,6 @@ main_loop:
   lda #$00
   sta prep_next_row
 
-  ;;;;;
   dec row_number
 
   lda row_number
@@ -226,20 +225,15 @@ main_loop:
   sta row_tile_ptr_lo
   lda tiles_hi_table, x
   sta row_tile_ptr_hi
-  ;
+
   lda attribs_lo_table, x
   sta row_attrib_ptr_lo
   lda attribs_hi_table, x
   sta row_attrib_ptr_hi
-  ;;;;;
 
 dont_reset_row_number:
 
 dont_prepare_row:
-
-; --------------------------------------------------
-; Draw some demonstration text to status bar
-; --------------------------------------------------
 
 ; --------------------------------------------------
 ; Wait until NMI resets 'sleeping' to 0
