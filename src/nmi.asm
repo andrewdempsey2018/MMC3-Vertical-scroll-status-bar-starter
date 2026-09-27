@@ -38,8 +38,9 @@ nmi:
   jsr read_controller
 
 ; --------------------------------------------------
-; Draw a row of meta tiles if scroll threshold has
-; been reached.
+; Draw a row of meta tiles If scrolling is on and 
+; if the scroll threshold has been reached -
+; (every 16 frames)
 ; --------------------------------------------------
   lda do_scroll
   beq dont_scroll

@@ -25,7 +25,6 @@ reset:
   lDA #0
   sta NAMETABLE_MIRRORING
 
-
 ; --------------------------------------------------
 ; Toggle PPU A12 (prevent undesirable IRQ behaviour)
 ; This code is verbatim in most MMC3 games
