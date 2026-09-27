@@ -30,7 +30,8 @@ palette_table:
   .byte $0F,$06,$16,$26
   .byte $0F,$09,$19,$29
 
-.include "levels.asm"
+.include "levels_data.asm"
+.include "statusbar_data.asm"
 
 ; --------------------------------------------------
 ; Scrolling tables.
@@ -102,6 +103,7 @@ main:
   sta do_irq
   sta row_number
 
+; first nametable is title screen
   lda #<title_screen_tiles_table
   sta row_tile_ptr_lo
   lda #>title_screen_tiles_table
@@ -113,11 +115,11 @@ main:
   sta row_attrib_ptr_hi
 
 ; --------------------------------------------------
-; nametable 01
+; Load status bar into nametable 01 ($2400)
 ; --------------------------------------------------
-  lda #<bar_table
+  lda #<statusbar_table
   sta ptr_lo
-  lda #>bar_table
+  lda #>statusbar_table
   sta ptr_hi
 
   lda PPUSTATUS
