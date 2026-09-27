@@ -55,3 +55,28 @@ ld65 -o output.nes -C ld65.cfg main.o --dbgfile output.dbg
 ld65 -C ld65.cfg -o output.nes main.o --mapfile output.map
 echo "------- DEBUG build S-U-C-C-E-S-S.-------"
 ```
+
+# Comments
+
+```
+; --------------------------------------------------
+; Comment here.
+; --------------------------------------------------
+```
+
+# Sub routine descriptions template
+
+```
+; --------------------------------------------------
+;
+;
+; Inputs:
+; 
+; Clobbers: 
+;
+; Outputs:
+;
+; Notes:
+;
+; --------------------------------------------------
+```

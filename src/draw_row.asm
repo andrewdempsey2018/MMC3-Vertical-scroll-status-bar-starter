@@ -6,7 +6,9 @@
 ;
 ; Inputs:
 ; row_number: the row number that will be drawn
+;
 ; row_tile_ptr: pointer to metatile data
+;
 ; row_attrib_ptr: pointer to attribute data
 ;
 ; Clobbers: A, X, Y

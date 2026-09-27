@@ -7,14 +7,18 @@
 ;
 ; Inputs:
 ; row_number: the row number that will be prepared
+;
 ; row_tile_ptr: pointer to metatile data
+;
 ; row_attrib_ptr: pointer to attribute data
 ;
 ; Clobbers: A
 ;
 ; Outputs:
 ; row_tile_ptr will be updated to point at next
+;
 ; row of data that is to rendered
+;
 ; row_attrib_ptr will be updated if applicable
 ;
 ; Notes:

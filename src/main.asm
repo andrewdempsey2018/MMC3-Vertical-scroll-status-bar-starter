@@ -46,6 +46,8 @@ palette_table:
 .include "controllers.asm"
 .include "prepare_row.asm"
 .include "draw_row.asm"
+.include "load_screen.asm"
+.include "change_level.asm"
 
 main:
 ; --------------------------------------------------
@@ -90,17 +92,6 @@ main:
   sta do_irq
   sta row_number
 
-; first nametable is title screen
-  lda #<title_screen_tiles_table
-  sta row_tile_ptr_lo
-  lda #>title_screen_tiles_table
-  sta row_tile_ptr_hi
-
-  lda #<title_screen_attribs_table
-  sta row_attrib_ptr_lo
-  lda #>title_screen_attribs_table
-  sta row_attrib_ptr_hi
-
 ; --------------------------------------------------
 ; Load status bar into nametable 01 ($2400)
 ; --------------------------------------------------
@@ -137,32 +128,37 @@ main:
   lda #14
   sta row_number
 
-load_next_row:
-  jsr draw_row
-  jsr prepare_row
-  dec row_number
-  lda row_number
-  cmp #255
-  bne load_next_row
-
-; now prepare for loading the first level
-  lda #14
-  sta row_number
-
-  ldx #0
-  lda tiles_lo_table, x
+; first nametable is title screen
+  lda #<title_screen_tiles_table
   sta row_tile_ptr_lo
-  lda tiles_hi_table, x
+  lda #>title_screen_tiles_table
   sta row_tile_ptr_hi
 
-  lda attribs_lo_table, x
+  lda #<title_screen_attribs_table
   sta row_attrib_ptr_lo
-  lda attribs_hi_table, x
+  lda #>title_screen_attribs_table
   sta row_attrib_ptr_hi
 
-  jsr draw_row
-  jsr prepare_row
-  dec row_number
+  jsr load_screen
+
+; now prepare for loading the first level
+;  lda #14
+;  sta row_number
+
+;  ldx #0
+;  lda tiles_lo_table, x
+;  sta row_tile_ptr_lo
+;  lda tiles_hi_table, x
+;  sta row_tile_ptr_hi
+
+;  lda attribs_lo_table, x
+;  sta row_attrib_ptr_lo
+;  lda attribs_hi_table, x
+;  sta row_attrib_ptr_hi
+
+;  jsr draw_row
+;  jsr prepare_row
+;  dec row_number
 
 ; --------------------------------------------------
 ; Enable maskable interrupts
@@ -191,6 +187,26 @@ main_loop:
   and #BTN_START
   beq button_check_done
 
+; now prepare for loading the first level
+  lda #14
+  sta row_number
+
+  ldx #0
+  lda tiles_lo_table, x
+  sta row_tile_ptr_lo
+  lda tiles_hi_table, x
+  sta row_tile_ptr_hi
+
+  lda attribs_lo_table, x
+  sta row_attrib_ptr_lo
+  lda attribs_hi_table, x
+  sta row_attrib_ptr_hi
+
+  jsr draw_row
+  jsr prepare_row
+  dec row_number
+
+; turn on scrolling & MMC scanline IRQ
   lda #$01
   sta do_scroll
   sta do_irq
