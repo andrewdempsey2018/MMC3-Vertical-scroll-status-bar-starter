@@ -217,6 +217,11 @@ finished_updating_scene:
   sta row_number
   
   inc screen_number
+  cpx #4 ; currently only 4 screens of data for demo purposes
+  bne :+ ; screens wrap around when all 4 have been drawn
+  ldx #0
+  stx screen_number
+:
   ldx screen_number
   lda tiles_lo_table, x
   sta row_tile_ptr_lo
