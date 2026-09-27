@@ -22,6 +22,8 @@ irq:
   stx PPUCTRL
   stx PPUMASK
   lda PPUSTATUS
+
+; palette
   lda #$3F
   sta PPUADDR
   lda #$01

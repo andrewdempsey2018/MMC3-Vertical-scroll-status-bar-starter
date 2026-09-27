@@ -5,6 +5,8 @@ nmi:
   ldx #$00
   stx PPUCTRL
   stx PPUMASK
+
+; palette
   lda PPUSTATUS
   lda #$3F
   sta PPUADDR
@@ -15,18 +17,7 @@ nmi:
   lda #$10
   sta PPUDATA
 
-  ; --------------------------------------------------
-; Enable sprites and background
-; draw sprites and bg on leftmost side of screen
-; --------------------------------------------------
-  lda #%00011110 
-  sta PPUMASK
 
-; --------------------------------------------------
-; NMI on, background at $1000 sprites at $0000
-; --------------------------------------------------
-  lda #%10001000
-  sta PPUCTRL
 
 ; --------------------------------------------------
 ; Trigger sprite DMA transfer
@@ -50,7 +41,7 @@ nmi:
 ; been reached.
 ; --------------------------------------------------
   lda do_scroll
-  beq test
+  beq dont_scroll
 
   lda scroll_y
   and #%00001111 ; multiple of 16
@@ -73,7 +64,7 @@ dont_draw_row:
   sta scroll_y
 dont_reset_scroll_value:
 
-test:
+dont_scroll:
   lda scroll_x
   sta PPUSCROLL
   lda scroll_y
@@ -85,9 +76,28 @@ test:
   lda #$00
   sta sleeping
 
+  ; --------------------------------------------------
+; Enable sprites and background
+; draw sprites and bg on leftmost side of screen
+; --------------------------------------------------
+  lda #%00011110 
+  sta PPUMASK
+
+; --------------------------------------------------
+; NMI on, background at $1000 sprites at $0000
+; --------------------------------------------------
+  lda #%10001000
+  sta PPUCTRL
+
   RESTORE_REGISTERS
 
+; --------------------------------------------------
+; 
+; --------------------------------------------------
+  lda do_irq
+  beq :+
   sta $E001
   sta $C001
+:
 
   rti

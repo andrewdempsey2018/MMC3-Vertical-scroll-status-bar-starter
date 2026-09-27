@@ -15,6 +15,7 @@ row_attrib_ptr_hi = row_attrib_ptr+1
 prep_next_row: .res 1
 screen_number: .res 1
 do_scroll: .res 1
+do_irq: .res 1
 
 .segment "RODATA"
 palette_table:
@@ -98,6 +99,7 @@ main:
   sta prep_next_row
   sta screen_number
   sta do_scroll
+  sta do_irq
   sta row_number
 
   lda #<title_screen_tiles_table
@@ -109,8 +111,6 @@ main:
   sta row_attrib_ptr_lo
   lda #>title_screen_attribs_table
   sta row_attrib_ptr_hi
-
-  
 
 ; --------------------------------------------------
 ; nametable 01
@@ -198,29 +198,13 @@ main_loop:
 ; --------------------------------------------------
 ; porcess inputs
 ; --------------------------------------------------
-check_up:
-  lda buttons_held
-  and #BTN_UP
-  beq check_down
+  lda buttons_pressed
+  and #BTN_START
+  beq :+
 
   lda #$01
   sta do_scroll
-check_down:
-  lda buttons_held
-  and #BTN_DOWN
-  beq check_left
-
-  lda #$00
-  sta do_scroll
-
-check_left:
-  lda buttons_held
-  and #BTN_LEFT
-  beq check_right
-check_right:
-  lda buttons_held
-  and #BTN_RIGHT
-  beq :+
+  sta do_irq
 :
 
 ; --------------------------------------------------
@@ -263,6 +247,10 @@ check_right:
 dont_reset_row_number:
 
 dont_prepare_row:
+
+; --------------------------------------------------
+; Draw some demonstration text to status bar
+; --------------------------------------------------
 
 ; --------------------------------------------------
 ; Wait until NMI resets 'sleeping' to 0
