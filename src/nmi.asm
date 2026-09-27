@@ -7,9 +7,14 @@ nmi:
   stx PPUMASK
 
 ; --------------------------------------------------
+; IRQ only tasks
+; Code that executes when MMC3 scanline IRQ is on.
+; --------------------------------------------------
+  ;lda do_irq
+  ;beq no_irq
+
 ; IRQ changes some palette values to colors needed
 ; for status bar, restore these to orignal values.
-; --------------------------------------------------
   lda PPUSTATUS
   lda #$3F
   sta PPUADDR
@@ -19,6 +24,31 @@ nmi:
   sta PPUDATA
   lda #$10
   sta PPUDATA
+
+; draw some demo text to status bar
+; inefficient code, for demo purposes
+; value to be displayed should be calculated outside of NMI
+  lda PPUSTATUS
+  lda #$24
+  sta PPUADDR
+  lda #$4F
+  sta PPUADDR
+  lda scroll_y
+  and #%11110000
+  lsr a
+  lsr a
+  lsr a
+  lsr a
+  clc
+  adc #$40
+  sta PPUDATA
+  lda scroll_y
+  and #%00001111
+  clc
+  adc #$40
+  sta PPUDATA
+
+no_irq:
 
 ; --------------------------------------------------
 ; Trigger sprite DMA transfer
@@ -95,10 +125,10 @@ dont_scroll:
 ; If IRQ is on,
 ; --------------------------------------------------
   lda do_irq
-  beq :+
+  beq no_irq_reload
   sta IRQ_ENABLE
   sta IRQ_RELOAD
-:
+no_irq_reload:
 
   RESTORE_REGISTERS
 
