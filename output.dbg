@@ -6,7 +6,7 @@ file	id=2,name="src/statusbar_data.asm",size=4688,mtime=0x6AB8E956,mod=0
 file	id=3,name="src/header.asm",size=548,mtime=0x6A8E7EB6,mod=0
 file	id=4,name="src/macros.asm",size=218,mtime=0x6A89EA98,mod=0
 file	id=5,name="src/constants.asm",size=757,mtime=0x6ABA93E5,mod=0
-file	id=6,name="src/reset.asm",size=2467,mtime=0x6ABA93D3,mod=0
+file	id=6,name="src/reset.asm",size=2493,mtime=0x6ABA94B0,mod=0
 file	id=7,name="src/nmi.asm",size=2983,mtime=0x6ABA93E8,mod=0
 file	id=8,name="src/irq.asm",size=1232,mtime=0x6ABA93CD,mod=0
 file	id=9,name="src/controllers.asm",size=718,mtime=0x6A8DF270,mod=0

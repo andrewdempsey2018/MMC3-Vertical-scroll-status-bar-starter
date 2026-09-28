@@ -41,7 +41,7 @@ toggle:
   lda #208 ; status bar is 32 pixels high
   sta MMC3_IRQ_LATCH
 
-; asd
+; Initialise 8 CHR bank windows
   lda #%00000000
   sta MMC3_BANK_SELECT
   lda #0
