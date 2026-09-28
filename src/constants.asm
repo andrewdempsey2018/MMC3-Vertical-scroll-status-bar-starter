@@ -20,8 +20,10 @@ APU_DMC = $4010
 ; --------------------------------------------------
 ; MMC3 registers
 ; --------------------------------------------------
-IRQ_LATCH = $C000
-IRQ_RELOAD = $C001
-IRQ_DISABLE = $E000
-IRQ_ENABLE = $E001
+MMC3_IRQ_LATCH = $C000
+MMC3_IRQ_RELOAD = $C001
+MMC3_IRQ_DISABLE = $E000
+MMC3_IRQ_ENABLE = $E001
 NAMETABLE_MIRRORING = $A000
+MMC3_BANK_SELECT = $8000
+MMC3_BANK_DATA = $8001

@@ -113,8 +113,8 @@ dont_scroll:
 ; --------------------------------------------------
   lda do_irq
   beq no_irq_reload
-  sta IRQ_ENABLE
-  sta IRQ_RELOAD
+  sta MMC3_IRQ_ENABLE
+  sta MMC3_IRQ_RELOAD
 no_irq_reload:
 
 ; --------------------------------------------------

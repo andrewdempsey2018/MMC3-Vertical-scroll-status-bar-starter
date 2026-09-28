@@ -3,7 +3,7 @@
 irq:
   SAVE_REGISTERS
   
-  sta IRQ_DISABLE
+  sta MMC3_IRQ_DISABLE
 
 ; --------------------------------------------------
 ; NOP loop to clean MMC3 related status bar

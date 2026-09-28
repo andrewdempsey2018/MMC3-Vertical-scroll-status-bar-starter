@@ -20,15 +20,13 @@ reset:
 ; Mapper init code can go here
 ; --------------------------------------------------
   lda #0
-  sta IRQ_DISABLE
+  sta MMC3_IRQ_DISABLE
 
   lDA #0
   sta NAMETABLE_MIRRORING
 
-; --------------------------------------------------
 ; Toggle PPU A12 (prevent undesirable IRQ behaviour)
 ; This code is verbatim in most MMC3 games
-; --------------------------------------------------
   bit PPUSTATUS
   lda #$10
   tax
@@ -39,11 +37,40 @@ toggle:
   dex
   bne toggle
 
-; --------------------------------------------------
 ; Set scanline IRQ will trigger
-; --------------------------------------------------
   lda #208 ; status bar is 32 pixels high
-  sta IRQ_LATCH
+  sta MMC3_IRQ_LATCH
+
+; asd
+  lda #%00000000
+  sta MMC3_BANK_SELECT
+  lda #0
+  sta MMC3_BANK_DATA
+  
+  lda #%00000001
+  sta MMC3_BANK_SELECT
+  lda #2
+  sta MMC3_BANK_DATA
+
+  lda #%00000010
+  sta MMC3_BANK_SELECT
+  lda #4
+  sta MMC3_BANK_DATA
+
+  lda #%00000011
+  sta MMC3_BANK_SELECT
+  lda #5
+  sta MMC3_BANK_DATA
+
+  lda #%00000100
+  sta MMC3_BANK_SELECT
+  lda #6
+  sta MMC3_BANK_DATA
+
+  lda #%00000101
+  sta MMC3_BANK_SELECT
+  lda #7
+  sta MMC3_BANK_DATA
 
 ; --------------------------------------------------
 ; VBlank wait 1 of 2
